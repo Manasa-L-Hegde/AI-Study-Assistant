@@ -11,131 +11,59 @@ st.set_page_config(
     menu_items={"About": "AI Study Assistant - Learn Smarter with AI 🚀"}
 )
 
-# Custom CSS for a dark, responsive cute design
+# Custom CSS for cute design
 st.markdown("""
 <style>
-    :root {
-        --bg-0: #0b1220;
-        --bg-1: #111b2e;
-        --bg-2: #14233a;
-        --card: rgba(17, 27, 46, 0.78);
-        --mint: #86efac;
-        --cyan: #67e8f9;
-        --amber: #fbbf24;
-        --text: #e7edf8;
-        --muted: #9fb0ca;
-        --line: rgba(148, 163, 184, 0.28);
-        --soft-shadow: 0 14px 34px rgba(2, 6, 23, 0.45);
+    /* Gradient background */
+    .main {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
-
-    .stApp {
-        background:
-            radial-gradient(circle at 8% 8%, rgba(103, 232, 249, 0.10) 0 20%, transparent 21%),
-            radial-gradient(circle at 86% 22%, rgba(251, 191, 36, 0.12) 0 16%, transparent 17%),
-            linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 45%, var(--bg-2) 100%);
-        color: var(--text);
+    
+    /* Title styling */
+    h1 {
+        color: #667eea;
+        text-align: center;
+        font-size: 3em;
+        margin-bottom: 0.5em;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
-
-    h1, h2, h3 {
-        color: var(--text);
-        letter-spacing: 0.2px;
+    
+    h2 {
+        color: #764ba2;
+        border-bottom: 3px solid #667eea;
+        padding-bottom: 0.5em;
     }
-
-    .hero-box {
-        backdrop-filter: blur(6px);
-        background: linear-gradient(120deg, rgba(22, 35, 58, 0.88), rgba(17, 27, 46, 0.88));
-        border: 1px solid var(--line);
-        border-radius: 22px;
-        padding: 1.1rem 1.2rem;
-        box-shadow: var(--soft-shadow);
-        margin-bottom: 1rem;
-    }
-
-    .chip-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 8px;
-    }
-
-    .chip {
-        background: rgba(15, 23, 42, 0.62);
-        border: 1px solid var(--line);
-        color: var(--text);
-        border-radius: 999px;
-        font-size: 0.82rem;
-        padding: 5px 10px;
-    }
-
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0e1729 0%, #121f36 100%);
-        border-right: 1px solid var(--line);
-    }
-
+    
+    /* Button styling */
     .stButton > button {
-        background: linear-gradient(110deg, #22d3ee, #34d399);
-        color: #0a1526;
-        border: 0;
-        border-radius: 16px;
-        padding: 0.62rem 0.95rem;
-        font-weight: 700;
-        box-shadow: 0 10px 22px rgba(16, 185, 129, 0.30);
-        transition: transform .15s ease, box-shadow .15s ease;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-size: 1.1em;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        transition: transform 0.2s, box-shadow 0.2s;
         width: 100%;
     }
-
+    
     .stButton > button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 14px 24px rgba(34, 211, 238, 0.35);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
     }
-
+    
+    /* Text area styling */
     .stTextArea textarea {
-        border-radius: 14px;
-        border: 2px solid rgba(103, 232, 249, 0.35);
-        background: rgba(15, 23, 42, 0.66);
-        color: var(--text);
-    }
-
-    .stTabs [data-baseweb="tab-list"] {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.80), rgba(30, 41, 59, 0.80));
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 6px;
-    }
-
-    .stTabs [data-baseweb="tab"] {
         border-radius: 10px;
-        font-weight: 600;
-        color: var(--text);
+        border: 2px solid #667eea;
     }
-
-    .stAlert {
-        border-radius: 12px;
-        border: 1px solid var(--line);
-    }
-
-    p, label, .stCaption, .stMarkdown {
-        color: var(--text);
-    }
-
-    @media (max-width: 900px) {
-        .hero-box {
-            padding: 0.95rem;
-            border-radius: 16px;
-        }
-
-        h1 {
-            font-size: 1.7rem !important;
-        }
-
-        .chip-row {
-            gap: 6px;
-        }
-
-        .chip {
-            font-size: 0.74rem;
-            padding: 4px 8px;
-        }
+    
+    /* Tab styling */
+    .stTabs [data-baseweb="tab-list"] {
+        background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+        border-radius: 10px;
+        padding: 5px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -146,7 +74,7 @@ model_name = (os.getenv("GROQ_MODEL") or "llama-3.1-8b-instant").strip()
 
 # Sidebar for API key management and settings
 with st.sidebar:
-    st.markdown("### 🎛️ Settings")
+    st.markdown("### ⚙️ Settings")
     if not api_key:
         st.warning("🔑 API Key not found in environment")
         api_key = st.text_input("Enter Groq API Key", type="password", placeholder="gsk-...").strip()
@@ -156,7 +84,7 @@ with st.sidebar:
             api_key = st.text_input("Enter Groq API Key", type="password", placeholder="gsk-...").strip()
     
     st.markdown("---")
-    st.markdown("### 🌟 Quick Tips")
+    st.markdown("### 💡 Quick Tips")
     st.info("Try topics like:\n- Python\n- Machine Learning\n- Data Science\n- Biology\n- History")
     
     st.markdown("---")
@@ -172,40 +100,24 @@ if api_key:
         st.error("❌ Invalid key format. Your Groq key should start with 'gsk_' or 'gsk-'.")
 
 # Main title
-st.markdown(
-    """
-    <div class="hero-box">
-        <h1 style="margin:0; text-align:center;">📚 AI Study Assistant</h1>
-        <p style="text-align:center; margin:8px 0 0 0; font-size:1.05rem; color:#cbd5e1;">
-            Cute, quick study support with explanations, short notes, and quiz practice.
-        </p>
-        <div class="chip-row">
-            <span class="chip">Beginner Friendly</span>
-            <span class="chip">Fast Summaries</span>
-            <span class="chip">Quiz Ready</span>
-            <span class="chip">Hackathon Demo</span>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+st.markdown("<h1>📚 AI Study Assistant</h1>", unsafe_allow_html=True)
+st.markdown("<div style='text-align: center; color: #764ba2; font-size: 1.2em; margin-bottom: 2em;'>🎯 Learn Smarter with AI | Get Explanations, Notes & Quizzes</div>", unsafe_allow_html=True)
 
 # Input section
 col1, col2 = st.columns([3, 1])
 with col1:
-    st.markdown("### 📝 What topic should we break down?")
+    st.markdown("### 📝 What would you like to learn?")
     user_input = st.text_area(
-        "Topic / concept",
+        "Enter topic or concept:",
         placeholder="e.g., PCA, Binary Search, Data Drift, Photosynthesis...",
-        height=110
+        height=100
     )
 
 with col2:
     st.write("")
     st.write("")
     st.write("")
-    st.caption("Tap once to generate")
-    generate = st.button("🚀 Generate Study Pack", use_container_width=True)
+    generate = st.button("🚀 Generate", use_container_width=True)
 
 if generate:
     if user_input.strip() == "":
