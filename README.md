@@ -94,6 +94,9 @@ Recommended flow:
 3. Add `GROQ_API_KEY` in the app secrets/settings.
 4. Share the live demo link with judges or users.
 
+## Live Demo
+[Open the app](https://manasa-l-hegde-ai-study-assistant-app-lu8u3g.streamlit.app/)
+
 ## Security Notes
 - API keys should stay in environment variables or deployment secrets.
 - Do not commit keys into `app.py`, README, screenshots, or git history.
