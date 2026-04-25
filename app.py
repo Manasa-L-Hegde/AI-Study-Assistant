@@ -12,27 +12,29 @@ st.set_page_config(
     menu_items={"About": "AI Study Assistant - Learn Smarter with AI 🚀"}
 )
 
-# Custom CSS for a dark, responsive cute design
+# Custom CSS for a dark, cute floral design
 st.markdown("""
 <style>
     :root {
-        --bg-0: #0b1220;
-        --bg-1: #111b2e;
-        --bg-2: #14233a;
-        --card: rgba(17, 27, 46, 0.78);
-        --mint: #86efac;
-        --cyan: #67e8f9;
-        --amber: #fbbf24;
+        --bg-0: #020305;
+        --bg-1: #05070d;
+        --bg-2: #0b1020;
+        --card: rgba(10, 14, 24, 0.88);
         --text: #e7edf8;
-        --muted: #9fb0ca;
-        --line: rgba(148, 163, 184, 0.28);
-        --soft-shadow: 0 14px 34px rgba(2, 6, 23, 0.45);
+        --muted: #aab4c8;
+        --line: rgba(180, 190, 210, 0.22);
+        --shadow: 0 18px 44px rgba(0, 0, 0, 0.58);
     }
 
     .stApp {
         background:
-            radial-gradient(circle at 8% 8%, rgba(103, 232, 249, 0.10) 0 20%, transparent 21%),
-            radial-gradient(circle at 86% 22%, rgba(251, 191, 36, 0.12) 0 16%, transparent 17%),
+            radial-gradient(circle at 10% 12%, rgba(255,255,255,0.08) 0 1.6px, transparent 1.7px),
+            radial-gradient(circle at 22% 28%, rgba(255,255,255,0.06) 0 1.2px, transparent 1.3px),
+            radial-gradient(circle at 78% 18%, rgba(255,255,255,0.08) 0 1.5px, transparent 1.6px),
+            radial-gradient(circle at 86% 35%, rgba(255,255,255,0.06) 0 1.1px, transparent 1.2px),
+            radial-gradient(circle at 15% 78%, rgba(255,255,255,0.07) 0 1.4px, transparent 1.5px),
+            radial-gradient(circle at 68% 82%, rgba(255,255,255,0.06) 0 1.2px, transparent 1.3px),
+            radial-gradient(circle at 40% 55%, rgba(255,255,255,0.05) 0 1.2px, transparent 1.3px),
             linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 45%, var(--bg-2) 100%);
         color: var(--text);
     }
@@ -43,12 +45,12 @@ st.markdown("""
     }
 
     .hero-box {
-        backdrop-filter: blur(6px);
-        background: linear-gradient(120deg, rgba(22, 35, 58, 0.88), rgba(17, 27, 46, 0.88));
+        backdrop-filter: blur(10px);
+        background: linear-gradient(120deg, rgba(18, 23, 36, 0.92), rgba(8, 11, 18, 0.92));
         border: 1px solid var(--line);
         border-radius: 22px;
         padding: 1.1rem 1.2rem;
-        box-shadow: var(--soft-shadow);
+        box-shadow: var(--shadow);
         margin-bottom: 1rem;
     }
 
@@ -56,11 +58,12 @@ st.markdown("""
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
-        margin-top: 8px;
+        margin-top: 10px;
+        justify-content: center;
     }
 
     .chip {
-        background: rgba(15, 23, 42, 0.62);
+        background: rgba(255, 255, 255, 0.06);
         border: 1px solid var(--line);
         color: var(--text);
         border-radius: 999px;
@@ -69,36 +72,57 @@ st.markdown("""
     }
 
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0e1729 0%, #121f36 100%);
+        background: linear-gradient(180deg, #070b12 0%, #0c1322 100%);
         border-right: 1px solid var(--line);
     }
 
     .stButton > button {
-        background: linear-gradient(110deg, #22d3ee, #34d399);
-        color: #0a1526;
+        background: linear-gradient(110deg, #f8fafc, #dbeafe);
+        color: #050816 !important;
         border: 0;
         border-radius: 16px;
         padding: 0.62rem 0.95rem;
-        font-weight: 700;
-        box-shadow: 0 10px 22px rgba(16, 185, 129, 0.30);
+        font-weight: 800;
+        box-shadow: 0 10px 22px rgba(255, 255, 255, 0.10);
         transition: transform .15s ease, box-shadow .15s ease;
         width: 100%;
     }
 
+    .stButton > button * {
+        color: #050816 !important;
+    }
+
     .stButton > button:hover {
         transform: translateY(-1px);
-        box-shadow: 0 14px 24px rgba(34, 211, 238, 0.35);
+        box-shadow: 0 14px 24px rgba(255, 255, 255, 0.15);
+        color: #020305 !important;
+    }
+
+    .stButton > button:hover * {
+        color: #020305 !important;
+    }
+
+    .stButton > button:focus,
+    .stButton > button:active {
+        color: #020305 !important;
+        outline: 2px solid rgba(103, 232, 249, 0.45);
+        outline-offset: 1px;
+    }
+
+    .stButton > button:focus *,
+    .stButton > button:active * {
+        color: #020305 !important;
     }
 
     .stTextArea textarea {
         border-radius: 14px;
-        border: 2px solid rgba(103, 232, 249, 0.35);
-        background: rgba(15, 23, 42, 0.66);
+        border: 2px solid rgba(255, 255, 255, 0.18);
+        background: rgba(3, 6, 15, 0.92);
         color: var(--text);
     }
 
     .stTabs [data-baseweb="tab-list"] {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.80), rgba(30, 41, 59, 0.80));
+        background: rgba(255, 255, 255, 0.05);
         border: 1px solid var(--line);
         border-radius: 14px;
         padding: 6px;
@@ -110,9 +134,34 @@ st.markdown("""
         color: var(--text);
     }
 
+    .stContainer {
+        border-radius: 14px;
+    }
+
     .stAlert {
         border-radius: 12px;
         border: 1px solid var(--line);
+    }
+
+    .result-card {
+        background: rgba(9, 14, 24, 0.92);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px;
+        margin-top: 6px;
+    }
+
+    .result-card p,
+    .result-card li,
+    .result-card strong,
+    .result-card div {
+        color: #e7edf8 !important;
+    }
+
+    .quiz-option-hint {
+        color: #b7c4dd;
+        font-size: 0.9rem;
+        margin-bottom: 6px;
     }
 
     p, label, .stCaption, .stMarkdown {
@@ -140,12 +189,11 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
 # Read Groq API key from environment first, then allow manual input as fallback.
 env_api_key = (os.getenv("GROQ_API_KEY") or "").strip()
 model_name = (os.getenv("GROQ_MODEL") or "llama-3.1-8b-instant").strip()
 
-# Sidebar for API key management and settings
+manual_api_key = ""
 with st.sidebar:
     st.markdown("### 🎛️ Settings")
     if not env_api_key:
@@ -155,13 +203,11 @@ with st.sidebar:
         st.success("✅ API Key loaded from environment")
         if st.checkbox("Use different key?"):
             manual_api_key = st.text_input("Enter Groq API Key", type="password", placeholder="gsk-...").strip()
-        else:
-            manual_api_key = ""
 
     st.markdown("---")
     st.markdown("### 🌟 Quick Tips")
     st.info("Try topics like:\n- Python\n- Machine Learning\n- Data Science\n- Biology\n- History")
-    
+
     st.markdown("---")
     st.markdown("### 🔗 Useful Links")
     st.markdown("[📌 Get Groq API Key](https://console.groq.com)")
@@ -175,7 +221,6 @@ if api_key:
         client = OpenAI(api_key=api_key, base_url="https://api.groq.com/openai/v1")
     else:
         st.error("❌ Invalid key format. Your Groq key should start with 'gsk_' or 'gsk-'.")
-
 
 def extract_json_payload(text: str) -> dict:
     """Best-effort extraction of a JSON object from LLM output."""
@@ -245,24 +290,79 @@ def normalize_study_data(raw_data: dict) -> dict:
         "quiz": normalized_quiz,
     }
 
+
+def render_study_pack(topic: str, data: dict) -> None:
+    """Render persisted results so Streamlit reruns do not hide quiz state."""
+    st.success("✅ Study material generated successfully!")
+    st.markdown("---")
+
+    tab1, tab2, tab3 = st.tabs(["📘 Explanation", "📝 Notes", "❓ Quiz"])
+
+    with tab1:
+        with st.container(border=True):
+            st.markdown(f"### 📖 {topic.title()}")
+            st.markdown(f"<div class='result-card'>{data['explanation']}</div>", unsafe_allow_html=True)
+
+    with tab2:
+        with st.container(border=True):
+            st.markdown("### 📌 Important Notes")
+            notes_md = "".join(
+                [f"<p><strong>Important {idx}:</strong> {note}</p>" for idx, note in enumerate(data["notes"], 1)]
+            )
+            st.markdown(f"<div class='result-card'>{notes_md}</div>", unsafe_allow_html=True)
+
+    with tab3:
+        with st.container(border=True):
+            st.markdown("### 🧠 Test Your Knowledge")
+            if "quiz_selected" not in st.session_state:
+                st.session_state["quiz_selected"] = {}
+
+            for idx, q in enumerate(data["quiz"], 1):
+                st.markdown(f"**Question {idx}:** {q['question']}")
+                st.markdown("<div class='quiz-option-hint'>Click one option to check your answer.</div>", unsafe_allow_html=True)
+
+                correct_answer = q["answer"]
+                state_key = f"selected_{idx}"
+
+                for i, opt in enumerate(q["options"]):
+                    if st.button(f"Option {i + 1}: {opt}", key=f"q{idx}_{i}", use_container_width=True):
+                        st.session_state["quiz_selected"][state_key] = opt
+
+                selected = st.session_state["quiz_selected"].get(state_key)
+                if selected:
+                    if selected == correct_answer:
+                        st.success(f"Correct! You clicked: {selected}")
+                    else:
+                        st.error(f"Wrong. You clicked: {selected}")
+                        st.info("Try again.")
+
+                st.divider()
+
+
+if "study_data" not in st.session_state:
+    st.session_state["study_data"] = None
+
+if "study_topic" not in st.session_state:
+    st.session_state["study_topic"] = ""
 # Main title
 st.markdown(
     """
     <div class="hero-box">
         <h1 style="margin:0; text-align:center;">📚 AI Study Assistant</h1>
-        <p style="text-align:center; margin:8px 0 0 0; font-size:1.05rem; color:#cbd5e1;">
-            Cute, quick study support with explanations, short notes, and quiz practice.
+        <p style="text-align:center; margin:10px 0 0 0; font-size:1.05rem; color:#cbd5e1;">
+            Turn any topic into simple explanations, important notes, and quiz practice in seconds.
         </p>
         <div class="chip-row">
             <span class="chip">Beginner Friendly</span>
             <span class="chip">Fast Summaries</span>
-            <span class="chip">Quiz Ready</span>
-            <span class="chip">Hackathon Demo</span>
+            <span class="chip">Quiz Practice</span>
+            <span class="chip">Hackathon Ready</span>
         </div>
     </div>
     """,
     unsafe_allow_html=True,
-)
+)  
+
 
 # Input section
 col1, col2 = st.columns([3, 1])
@@ -299,60 +399,52 @@ if generate:
 Give output ONLY in JSON format like this:
 
 {{
-    "explanation": "...",
-    "notes": ["point1", "point2", "point3"],
+    "explanation": "A clear, detailed but simple explanation in 2 to 4 short paragraphs.",
+    "notes": [
+        "Detailed important point 1 with a small explanation",
+        "Detailed important point 2 with a small explanation",
+        "Detailed important point 3 with a small explanation",
+        "Detailed important point 4 with a small explanation",
+        "Detailed important point 5 with a small explanation"
+    ],
     "quiz": [
         {{
-            "question": "...",
+            "question": "A good concept-check question",
             "options": ["A", "B", "C", "D"],
-            "answer": "..."
+            "answer": "Correct option text"
+        }},
+        {{
+            "question": "Another concept-check question",
+            "options": ["A", "B", "C", "D"],
+            "answer": "Correct option text"
+        }},
+        {{
+            "question": "Another concept-check question",
+            "options": ["A", "B", "C", "D"],
+            "answer": "Correct option text"
         }}
     ]
 }}
 
 Topic: {user_input}
-Explain in simple terms.
+Explain in simple terms, but make the notes detailed and useful for revision.
+Do not keep it too short.
 """
 
             try:
                 response = client.chat.completions.create(
                     model=model_name,
                     messages=[{"role": "user", "content": prompt}],
-                    temperature=0.7
+                    temperature=0.7,
                 )
 
                 output = response.choices[0].message.content
 
                 try:
                     data = normalize_study_data(extract_json_payload(output))
-
-                    st.success("✅ Study material generated successfully!")
-                    st.markdown("---")
-
-                    # Tabs for better organization
-                    tab1, tab2, tab3 = st.tabs(["📘 Explanation", "📝 Notes", "❓ Quiz"])
-
-                    with tab1:
-                        with st.container(border=True):
-                            st.markdown(f"### 📖 {user_input.title()}")
-                            st.markdown(data["explanation"])
-
-                    with tab2:
-                        with st.container(border=True):
-                            st.markdown("### 📌 Key Points")
-                            for idx, note in enumerate(data["notes"], 1):
-                                st.markdown(f"**{idx}.** ✨ {note}")
-
-                    with tab3:
-                        with st.container(border=True):
-                            st.markdown("### 🧠 Test Your Knowledge")
-                            for idx, q in enumerate(data["quiz"], 1):
-                                with st.container(border=True):
-                                    st.markdown(f"**Question {idx}:** {q['question']}")
-                                    st.markdown("**Options:**")
-                                    for opt in q["options"]:
-                                        st.markdown(f"  • {opt}")
-                                    st.markdown(f"**✅ Correct Answer:** {q['answer']}")
+                    st.session_state["study_data"] = data
+                    st.session_state["study_topic"] = user_input
+                    st.session_state["quiz_selected"] = {}
 
                 except json.JSONDecodeError:
                     st.error("❌ The model returned an unreadable format. Showing raw output:")
@@ -367,3 +459,6 @@ Explain in simple terms.
             except Exception as e:
                 st.error(f"❌ Unexpected error: {str(e)}")
                 st.info("💡 Try checking your API key or try again in a few seconds.")
+
+if st.session_state["study_data"] is not None:
+    render_study_pack(st.session_state["study_topic"], st.session_state["study_data"])
