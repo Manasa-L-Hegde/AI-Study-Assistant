@@ -1,57 +1,54 @@
 # AI Study Assistant
 
-An AI-powered web app that helps students learn faster by generating explanations, notes, and quiz questions for any topic.
+AI Study Assistant is a modern Streamlit web app that turns any topic into a simple explanation, short study notes, and a quiz with answers. It is designed for quick revision, self-study, and hackathon demos, with a clean dark UI and a responsive layout that works well on desktop and mobile.
 
 ## Features
-- Simple explanation of any topic
-- Bullet-point notes
-- Auto-generated MCQs with answers
-- Fast and interactive UI using Streamlit
+- AI-generated explanation for any topic
+- Short bullet-point notes for revision
+- Quiz questions with correct answers
+- Dark, responsive, hackathon-friendly UI
+- Groq-powered model integration
 
 ## Tech Stack
 - Python 3.8+
 - Streamlit
-- Groq API (free LLM provider)
+- Groq API
+- OpenAI Python SDK
+- HTML/CSS for custom styling
 
-## Prerequisites
-- Python 3.8 or higher
-- Groq API key (free from https://console.groq.com)
+## Getting Started
 
-## Installation
-
-### 1. Clone this repository
+### 1. Clone the repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Manasa-L-Hegde/AI-Study-Assistant.git
 cd AI-Study-Assistant
 ```
 
-### 2. Create a virtual environment
-```bash
-python -m venv .venv
-```
-
-### 3. Activate virtual environment
+### 2. Create and activate a virtual environment
 **Windows (PowerShell):**
 ```powershell
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
 **Windows (CMD):**
 ```cmd
+python -m venv .venv
 .venv\Scripts\activate
 ```
 
 **macOS/Linux:**
 ```bash
+python -m venv .venv
 source .venv/bin/activate
 ```
 
-### 4. Install dependencies
+### 3. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Set up Groq API key
+### 4. Set up your Groq API key
 **Windows (PowerShell):**
 ```powershell
 setx GROQ_API_KEY "gsk_YOUR_KEY"
@@ -68,51 +65,54 @@ setx GROQ_API_KEY gsk_YOUR_KEY
 export GROQ_API_KEY="gsk_YOUR_KEY"
 ```
 
-### 6. Run the app
+Optional model override:
+```powershell
+setx GROQ_MODEL "llama-3.1-8b-instant"
+```
+
+### 5. Run the app
 ```bash
 streamlit run app.py
 ```
 
-The app will open in your browser at `http://localhost:8501`
+The app will open at `http://localhost:8501`.
 
-## Usage Example
-1. Enter a topic: "PCA"
-2. Click "Generate Study Material"
-3. Get:
-   - Simple explanation
-   - Bullet-point notes
-   - Multiple-choice quiz with answers
+## Usage
+1. Enter a topic such as `PCA` or `Binary Search`.
+2. Click **Generate Study Pack**.
+3. Read the explanation, notes, and quiz in separate tabs.
 
-## API Key Management
-- Get free API key: https://console.groq.com
-- Free tier: Valid for 7 days, then generate a new key
-- **IMPORTANT:** Never commit API keys to GitHub
-- Keep `.env` and environment variables local only
-- Rotate keys regularly (set reminder for May 22, 2026)
+## Deployment
+This project is ready to deploy with **Streamlit Community Cloud**.
+
+Recommended flow:
+1. Push the repo to GitHub.
+2. Connect the repo to Streamlit Cloud.
+3. Add `GROQ_API_KEY` in the app secrets/settings.
+4. Share the live demo link with judges or users.
+
+## Security Notes
+- API keys should stay in environment variables or deployment secrets.
+- Do not commit keys into `app.py`, README, screenshots, or git history.
+- `.gitignore` already excludes `.venv/`, `.env`, and cache folders.
 
 ## Project Structure
 ```
 .
-├── app.py              # Main Streamlit application
-├── README.md           # This file
-├── requirements.txt    # Python dependencies
-└── .gitignore          # Git ignore file
+├── app.py
+├── README.md
+├── requirements.txt
+└── .gitignore
 ```
 
-## Security Notes
-- API keys are loaded from environment variables only
-- No secrets are stored in code or configuration files
-- Fallback: If env var not set, app shows input box for manual key entry
-- All keys in code/chat were rotated and should be ignored
-
 ## Troubleshooting
-- **Invalid key format error:** Ensure key starts with `gsk_`
-- **GROQ_API_KEY not set:** Set environment variable and restart terminal
-- **Model decommissioned:** Default model `llama-3.1-8b-instant` is current; update `GROQ_MODEL` env var if needed
-- **Quiz not rendering:** Check JSON format of LLM response
+- **Invalid key format**: Ensure the key starts with `gsk_` or `gsk-`.
+- **API key not found**: Set `GROQ_API_KEY` and restart the terminal.
+- **Model error**: Update `GROQ_MODEL` if Groq changes the default.
+- **No JSON output**: Retry or adjust the prompt/model settings.
 
-## Use Case
-Helps students quickly understand any concept and self-test knowledge through AI-generated quizzes.
+## Why this project
+Helps students learn faster by turning complex topics into clear explanations, concise notes, and quiz practice in a single app.
 
 ## License
 MIT

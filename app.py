@@ -1,7 +1,8 @@
 import os
 import json
+import re
 import streamlit as st
-from openai import OpenAI
+from openai import OpenAI, APIError, AuthenticationError, RateLimitError, BadRequestError, APITimeoutError
 
 # Page config with custom theme
 st.set_page_config(
@@ -141,20 +142,22 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Read Groq API key from environment first, then allow manual input as fallback.
-api_key = (os.getenv("GROQ_API_KEY") or "").strip()
+env_api_key = (os.getenv("GROQ_API_KEY") or "").strip()
 model_name = (os.getenv("GROQ_MODEL") or "llama-3.1-8b-instant").strip()
 
 # Sidebar for API key management and settings
 with st.sidebar:
     st.markdown("### 🎛️ Settings")
-    if not api_key:
+    if not env_api_key:
         st.warning("🔑 API Key not found in environment")
-        api_key = st.text_input("Enter Groq API Key", type="password", placeholder="gsk-...").strip()
+        manual_api_key = st.text_input("Enter Groq API Key", type="password", placeholder="gsk-...").strip()
     else:
         st.success("✅ API Key loaded from environment")
         if st.checkbox("Use different key?"):
-            api_key = st.text_input("Enter Groq API Key", type="password", placeholder="gsk-...").strip()
-    
+            manual_api_key = st.text_input("Enter Groq API Key", type="password", placeholder="gsk-...").strip()
+        else:
+            manual_api_key = ""
+
     st.markdown("---")
     st.markdown("### 🌟 Quick Tips")
     st.info("Try topics like:\n- Python\n- Machine Learning\n- Data Science\n- Biology\n- History")
@@ -164,12 +167,83 @@ with st.sidebar:
     st.markdown("[📌 Get Groq API Key](https://console.groq.com)")
     st.markdown("[⭐ GitHub](https://github.com)")
 
+api_key = env_api_key or manual_api_key
+
 client = None
 if api_key:
     if api_key.startswith("gsk_") or api_key.startswith("gsk-"):
         client = OpenAI(api_key=api_key, base_url="https://api.groq.com/openai/v1")
     else:
         st.error("❌ Invalid key format. Your Groq key should start with 'gsk_' or 'gsk-'.")
+
+
+def extract_json_payload(text: str) -> dict:
+    """Best-effort extraction of a JSON object from LLM output."""
+    candidates = []
+    cleaned = (text or "").strip()
+
+    fenced = re.search(r"```(?:json)?\s*([\s\S]*?)```", cleaned, re.IGNORECASE)
+    if fenced:
+        candidates.append(fenced.group(1).strip())
+
+    object_start = cleaned.find("{")
+    object_end = cleaned.rfind("}")
+    if object_start != -1 and object_end != -1 and object_end > object_start:
+        candidates.append(cleaned[object_start : object_end + 1])
+
+    array_start = cleaned.find("[")
+    array_end = cleaned.rfind("]")
+    if array_start != -1 and array_end != -1 and array_end > array_start:
+        candidates.append(cleaned[array_start : array_end + 1])
+
+    candidates.append(cleaned)
+
+    last_error = None
+    for candidate in candidates:
+        try:
+            return json.loads(candidate)
+        except json.JSONDecodeError as exc:
+            last_error = exc
+
+    raise last_error or json.JSONDecodeError("No valid JSON found", cleaned, 0)
+
+
+def normalize_study_data(raw_data: dict) -> dict:
+    """Normalize LLM response so the UI can always render safely."""
+    notes = raw_data.get("notes", [])
+    quiz_items = raw_data.get("quiz", [])
+
+    if not isinstance(notes, list):
+        notes = [str(notes)] if notes else []
+
+    if not isinstance(quiz_items, list):
+        quiz_items = []
+
+    normalized_quiz = []
+    for item in quiz_items:
+        if isinstance(item, dict):
+            normalized_quiz.append(
+                {
+                    "question": str(item.get("question", "Question unavailable.")),
+                    "options": item.get("options", ["Option unavailable"]),
+                    "answer": str(item.get("answer", "Answer unavailable.")),
+                }
+            )
+
+    if not normalized_quiz:
+        normalized_quiz = [
+            {
+                "question": "No quiz was returned by the model.",
+                "options": ["Try generating again"],
+                "answer": "Try generating again",
+            }
+        ]
+
+    return {
+        "explanation": str(raw_data.get("explanation", "No explanation was returned.")),
+        "notes": notes or ["No notes were returned."],
+        "quiz": normalized_quiz,
+    }
 
 # Main title
 st.markdown(
@@ -197,7 +271,8 @@ with col1:
     user_input = st.text_area(
         "Topic / concept",
         placeholder="e.g., PCA, Binary Search, Data Drift, Photosynthesis...",
-        height=110
+        height=110,
+        help="Enter one topic or concept. Keep it short for the best response.",
     )
 
 with col2:
@@ -205,11 +280,17 @@ with col2:
     st.write("")
     st.write("")
     st.caption("Tap once to generate")
-    generate = st.button("🚀 Generate Study Pack", use_container_width=True)
+    generate = st.button(
+        "🚀 Generate Study Pack",
+        use_container_width=True,
+        disabled=not user_input.strip(),
+    )
 
 if generate:
     if user_input.strip() == "":
         st.error("⚠️ Please enter a topic to learn about!")
+    elif len(user_input) > 1000:
+        st.warning("⚠️ Please keep the topic under 1000 characters for a better response.")
     elif client is None:
         st.error("❌ API key not configured. Check the settings in the sidebar.")
     else:
@@ -243,7 +324,7 @@ Explain in simple terms.
                 output = response.choices[0].message.content
 
                 try:
-                    data = json.loads(output)
+                    data = normalize_study_data(extract_json_payload(output))
 
                     st.success("✅ Study material generated successfully!")
                     st.markdown("---")
@@ -252,29 +333,37 @@ Explain in simple terms.
                     tab1, tab2, tab3 = st.tabs(["📘 Explanation", "📝 Notes", "❓ Quiz"])
 
                     with tab1:
-                        st.markdown(f"### 📖 {user_input.title()}")
-                        st.markdown(data["explanation"])
+                        with st.container(border=True):
+                            st.markdown(f"### 📖 {user_input.title()}")
+                            st.markdown(data["explanation"])
 
                     with tab2:
-                        st.markdown("### 📌 Key Points")
-                        for idx, note in enumerate(data["notes"], 1):
-                            st.markdown(f"**{idx}.** ✨ {note}")
+                        with st.container(border=True):
+                            st.markdown("### 📌 Key Points")
+                            for idx, note in enumerate(data["notes"], 1):
+                                st.markdown(f"**{idx}.** ✨ {note}")
 
                     with tab3:
-                        st.markdown("### 🧠 Test Your Knowledge")
-                        for idx, q in enumerate(data["quiz"], 1):
-                            with st.container():
-                                st.markdown(f"**Question {idx}:** {q['question']}")
-                                st.markdown("**Options:**")
-                                for opt in q["options"]:
-                                    st.markdown(f"  • {opt}")
-                                st.markdown(f"**✅ Correct Answer:** {q['answer']}")
-                                st.divider()
+                        with st.container(border=True):
+                            st.markdown("### 🧠 Test Your Knowledge")
+                            for idx, q in enumerate(data["quiz"], 1):
+                                with st.container(border=True):
+                                    st.markdown(f"**Question {idx}:** {q['question']}")
+                                    st.markdown("**Options:**")
+                                    for opt in q["options"]:
+                                        st.markdown(f"  • {opt}")
+                                    st.markdown(f"**✅ Correct Answer:** {q['answer']}")
 
                 except json.JSONDecodeError:
-                    st.error("❌ Formatting issue. Showing raw output:")
+                    st.error("❌ The model returned an unreadable format. Showing raw output:")
                     st.code(output, language="text")
 
+            except AuthenticationError:
+                st.error("❌ Invalid Groq API key. Please check your key and try again.")
+            except RateLimitError:
+                st.error("❌ Rate limit reached. Please wait a moment and try again.")
+            except (APITimeoutError, BadRequestError, APIError):
+                st.error("❌ Groq API request failed. Please try again in a few seconds.")
             except Exception as e:
-                st.error(f"❌ Error: {str(e)}")
+                st.error(f"❌ Unexpected error: {str(e)}")
                 st.info("💡 Try checking your API key or try again in a few seconds.")
