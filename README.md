@@ -16,6 +16,9 @@ AI Study Assistant is a modern Streamlit web app that turns any topic into a sim
 - OpenAI Python SDK
 - HTML/CSS for custom styling
 
+## Live Demo
+[Open the app](https://manasa-l-hegde-ai-study-assistant-app-lu8u3g.streamlit.app/)
+
 ## Getting Started
 
 ### 1. Clone the repository
