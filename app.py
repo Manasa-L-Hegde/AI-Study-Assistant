@@ -291,6 +291,47 @@ def normalize_study_data(raw_data: dict) -> dict:
     }
 
 
+def normalize_option_text(value: str) -> str:
+    """Normalize option/answer text for robust comparison."""
+    return re.sub(r"\s+", " ", str(value or "")).strip().lower()
+
+
+def resolve_correct_option(answer: str, options: list) -> str:
+    """Resolve model answer to the exact option text when possible."""
+    if not options:
+        return ""
+
+    answer_raw = str(answer or "").strip()
+    answer_norm = normalize_option_text(answer_raw)
+
+    # 1) Exact text match (case-insensitive)
+    for opt in options:
+        if normalize_option_text(opt) == answer_norm:
+            return opt
+
+    # 2) Letter/index match (A/B/C/D, Option B, 1/2/3/4)
+    letter_match = re.search(r"\b([A-D])\b", answer_raw, re.IGNORECASE)
+    if letter_match:
+        idx = ord(letter_match.group(1).upper()) - ord("A")
+        if 0 <= idx < len(options):
+            return options[idx]
+
+    number_match = re.search(r"\b([1-9]\d*)\b", answer_raw)
+    if number_match:
+        idx = int(number_match.group(1)) - 1
+        if 0 <= idx < len(options):
+            return options[idx]
+
+    # 3) Partial containment fallback
+    for opt in options:
+        opt_norm = normalize_option_text(opt)
+        if answer_norm and (answer_norm in opt_norm or opt_norm in answer_norm):
+            return opt
+
+    # If unresolved, keep original answer so UI can still display something meaningful.
+    return answer_raw
+
+
 def render_study_pack(topic: str, data: dict) -> None:
     """Render persisted results so Streamlit reruns do not hide quiz state."""
     st.success("✅ Study material generated successfully!")
@@ -321,16 +362,17 @@ def render_study_pack(topic: str, data: dict) -> None:
                 st.markdown(f"**Question {idx}:** {q['question']}")
                 st.markdown("<div class='quiz-option-hint'>Click one option to check your answer.</div>", unsafe_allow_html=True)
 
-                correct_answer = q["answer"]
+                options = [str(opt) for opt in q.get("options", [])]
+                correct_answer = resolve_correct_option(q.get("answer", ""), options)
                 state_key = f"selected_{idx}"
 
-                for i, opt in enumerate(q["options"]):
+                for i, opt in enumerate(options):
                     if st.button(f"Option {i + 1}: {opt}", key=f"q{idx}_{i}", use_container_width=True):
                         st.session_state["quiz_selected"][state_key] = opt
 
                 selected = st.session_state["quiz_selected"].get(state_key)
                 if selected:
-                    if selected == correct_answer:
+                    if normalize_option_text(selected) == normalize_option_text(correct_answer):
                         st.success(f"Correct! You clicked: {selected}")
                     else:
                         st.error(f"Wrong. You clicked: {selected}")
