@@ -20,6 +20,7 @@ from src.utils import (
     format_for_export,
     DataProcessor
 )
+from src.utils.session_manager import initialize_session_state
 from src.components.modern_ui_styles import ModernUIStyles
 from src.components.diagram_renderer import DiagramRenderer, CodeRenderer
 
@@ -35,6 +36,11 @@ st.set_page_config(
         "Report a bug": "https://github.com/yourusername/AI-Study-Assistant/issues"
     }
 )
+
+# CRITICAL: Initialize session state FIRST to prevent KeyError crashes
+# This must happen BEFORE any UI rendering or session_state access
+# This prevents deployment crashes on Streamlit Cloud where session state is fresh
+initialize_session_state()
 
 # Apply modern professional theme (light mode only)
 try:
@@ -54,14 +60,22 @@ def render_sidebar():
         # Settings Section
         st.markdown("### ⚙️ Settings")
         
-        # Study Mode Selection
+        # Study Mode Selection with safe initialization
         st.markdown("#### 📚 Study Mode")
+        
+        # Get current mode safely
+        current_mode = st.session_state.get("study_mode", "comprehensive")
+        default_index = 0 if current_mode == "comprehensive" else 1
+        
         study_mode = st.radio(
             "Select mode",
             ["Comprehensive", "Quick"],
+            index=default_index,
             help="Comprehensive: Detailed explanations with diagrams\nQuick: Concise summaries",
             label_visibility="collapsed"
         )
+        
+        # Update session state safely
         st.session_state["study_mode"] = study_mode.lower()
         
         st.markdown("---")

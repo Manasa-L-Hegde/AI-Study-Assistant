@@ -10,6 +10,47 @@ from typing import Dict, Any, List, Optional
 import streamlit as st
 
 
+def initialize_session_state():
+    """
+    CRITICAL: Initialize all session state variables with safe defaults.
+    This MUST be called at app startup to prevent KeyError crashes on deployment.
+    
+    This function ensures that all session state keys exist before any access,
+    preventing crashes on Streamlit Cloud where session state is fresh on deployment.
+    """
+    defaults = {
+        "analytics": {
+            "topics": 0,
+            "accuracy": 0,
+            "questions_asked": 0,
+            "study_time": 0,
+            "total_topics": 0,
+            "total_quizzes": 0,
+            "correct_answers": 0,
+            "total_questions": 0,
+            "last_activity": None,
+        },
+        "bookmarks": [],
+        "history": [],
+        "study_history": [],
+        "chat_history": [],
+        "study_mode": "comprehensive",
+        "theme": "light",
+        "api_configured": False,
+        "study_data": None,
+        "study_topic": "",
+        "quiz_selected": {},
+        "quiz_scores": {},
+        "show_sidebar": True,
+        "session_id": f"session_{int(time.time() * 1000)}",
+        "session_start": time.time(),
+    }
+
+    for key, value in defaults.items():
+        if key not in st.session_state:
+            st.session_state[key] = value
+
+
 class SessionManager:
     """Manager for user session data."""
     
@@ -18,7 +59,10 @@ class SessionManager:
         self._initialize_session_state()
     
     def _initialize_session_state(self) -> None:
-        """Initialize all session state variables."""
+        """
+        Initialize all session state variables with safe defaults.
+        This prevents KeyError crashes throughout the application.
+        """
         # Study data
         if "study_data" not in st.session_state:
             st.session_state["study_data"] = None
@@ -41,7 +85,7 @@ class SessionManager:
         if "study_history" not in st.session_state:
             st.session_state["study_history"] = []
         
-        # Analytics
+        # Analytics - Initialize with complete structure
         if "analytics" not in st.session_state:
             st.session_state["analytics"] = {
                 "total_topics": 0,
@@ -52,12 +96,16 @@ class SessionManager:
                 "last_activity": None,
             }
         
-        # UI state
+        # UI state - Default to light theme (no dark mode)
         if "theme" not in st.session_state:
-            st.session_state["theme"] = "dark"
+            st.session_state["theme"] = "light"
         
         if "show_sidebar" not in st.session_state:
             st.session_state["show_sidebar"] = True
+        
+        # Study mode - NEW: Initialize study mode
+        if "study_mode" not in st.session_state:
+            st.session_state["study_mode"] = "comprehensive"
         
         # Session metadata
         if "session_id" not in st.session_state:
@@ -86,9 +134,11 @@ class SessionManager:
         # Add to history
         self.add_to_history(topic, data)
         
-        # Update analytics
-        st.session_state["analytics"]["total_topics"] += 1
-        st.session_state["analytics"]["last_activity"] = datetime.now().isoformat()
+        # Update analytics - Safe access
+        analytics = st.session_state.get("analytics", {})
+        analytics["total_topics"] = analytics.get("total_topics", 0) + 1
+        analytics["last_activity"] = datetime.now().isoformat()
+        st.session_state["analytics"] = analytics
     
     def get_study_data(self) -> Optional[Dict[str, Any]]:
         """
@@ -125,8 +175,9 @@ class SessionManager:
         Returns:
             True if added, False if already exists
         """
-        # Check if already bookmarked
-        for bookmark in st.session_state["bookmarks"]:
+        # Check if already bookmarked - Safe access
+        bookmarks = st.session_state.get("bookmarks", [])
+        for bookmark in bookmarks:
             if bookmark["topic"].lower() == topic.lower():
                 return False
         
@@ -137,7 +188,8 @@ class SessionManager:
             "timestamp": datetime.now().isoformat(),
         }
         
-        st.session_state["bookmarks"].append(bookmark)
+        bookmarks.append(bookmark)
+        st.session_state["bookmarks"] = bookmarks
         return True
     
     def remove_bookmark(self, bookmark_id: str) -> bool:
@@ -150,10 +202,12 @@ class SessionManager:
         Returns:
             True if removed, False if not found
         """
-        bookmarks = st.session_state["bookmarks"]
+        # Safe access
+        bookmarks = st.session_state.get("bookmarks", [])
         for i, bookmark in enumerate(bookmarks):
             if bookmark["id"] == bookmark_id:
                 bookmarks.pop(i)
+                st.session_state["bookmarks"] = bookmarks
                 return True
         return False
     
@@ -176,7 +230,9 @@ class SessionManager:
         Returns:
             True if bookmarked, False otherwise
         """
-        for bookmark in st.session_state["bookmarks"]:
+        # Safe access
+        bookmarks = st.session_state.get("bookmarks", [])
+        for bookmark in bookmarks:
             if bookmark["topic"].lower() == topic.lower():
                 return True
         return False
@@ -196,8 +252,8 @@ class SessionManager:
             "timestamp": datetime.now().isoformat(),
         }
         
-        # Keep only last 50 entries
-        history = st.session_state["study_history"]
+        # Keep only last 50 entries - Safe access
+        history = st.session_state.get("study_history", [])
         history.insert(0, history_entry)
         st.session_state["study_history"] = history[:50]
     
@@ -228,29 +284,44 @@ class SessionManager:
             question_id: Question identifier
             is_correct: Whether the answer was correct
         """
-        analytics = st.session_state["analytics"]
-        analytics["total_questions"] += 1
+        # Safe access to analytics
+        analytics = st.session_state.get("analytics", {
+            "total_questions": 0,
+            "correct_answers": 0,
+            "last_activity": None
+        })
+        analytics["total_questions"] = analytics.get("total_questions", 0) + 1
         if is_correct:
-            analytics["correct_answers"] += 1
+            analytics["correct_answers"] = analytics.get("correct_answers", 0) + 1
         analytics["last_activity"] = datetime.now().isoformat()
+        st.session_state["analytics"] = analytics
     
     def get_analytics(self) -> Dict[str, Any]:
         """
-        Get analytics data.
+        Get analytics data with safe access.
         
         Returns:
             Analytics dictionary
         """
-        analytics = st.session_state["analytics"].copy()
+        # Safe access with fallback
+        analytics = st.session_state.get("analytics", {
+            "total_topics": 0,
+            "total_quizzes": 0,
+            "correct_answers": 0,
+            "total_questions": 0,
+            "study_time": 0,
+            "last_activity": None,
+        }).copy()
         
         # Calculate accuracy
-        if analytics["total_questions"] > 0:
-            analytics["accuracy"] = (analytics["correct_answers"] / analytics["total_questions"]) * 100
+        if analytics.get("total_questions", 0) > 0:
+            analytics["accuracy"] = (analytics.get("correct_answers", 0) / analytics["total_questions"]) * 100
         else:
             analytics["accuracy"] = 0
         
-        # Calculate session duration
-        analytics["session_duration"] = int(time.time() - st.session_state["session_start"])
+        # Calculate session duration with safe access
+        session_start = st.session_state.get("session_start", time.time())
+        analytics["session_duration"] = int(time.time() - session_start)
         
         return analytics
     
