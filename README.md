@@ -6,12 +6,27 @@
 ![Python](https://img.shields.io/badge/python-3.8+-green.svg)
 ![Streamlit](https://img.shields.io/badge/streamlit-1.35+-red.svg)
 ![License](https://img.shields.io/badge/license-MIT-yellow.svg)
+![Status](https://img.shields.io/badge/status-live-success.svg)
 
 **Transform any topic into clear explanations, detailed notes, and interactive quizzes in seconds.**
 
-[Live Demo](https://your-app-url.streamlit.app) • [Documentation](./docs) • [Report Bug](https://github.com/yourusername/AI-Study-Assistant/issues) • [Request Feature](https://github.com/yourusername/AI-Study-Assistant/issues)
+[🚀 Live Demo](https://manasa-l-hegde-ai-study-assistant-main-upgraded-v2-tsxxib.streamlit.app/) • [📖 Documentation](./docs) • [🐛 Report Bug](https://github.com/Manasa-L-Hegde/AI-Study-Assistant/issues) • [✨ Request Feature](https://github.com/Manasa-L-Hegde/AI-Study-Assistant/issues)
 
 </div>
+
+---
+
+## 🎉 What's New in v2.0
+
+### 🔧 Latest Updates (May 2026)
+- ✅ **Fixed Critical Deployment Bug**: Resolved session state KeyError crashes on Streamlit Cloud
+- ✅ **Centralized Session Management**: Added robust session state initialization
+- ✅ **Safe Access Patterns**: Implemented defensive programming for all session state operations
+- ✅ **Enhanced Stability**: Bulletproof error handling for production deployments
+- ✅ **Visual Diagrams**: Added Mermaid diagram support for visual learning
+- ✅ **Modern UI**: Professional, responsive interface with smooth animations
+- ✅ **Comprehensive Mode**: Detailed explanations with examples and interview points
+- ✅ **Quick Mode**: Fast, concise summaries for rapid learning
 
 ---
 
@@ -54,7 +69,7 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/AI-Study-Assistant.git
+   git clone https://github.com/Manasa-L-Hegde/AI-Study-Assistant.git
    cd AI-Study-Assistant
    ```
 
@@ -97,11 +112,20 @@
    ```
 
 5. **Run the application**
+   
+   **For the upgraded v2.0 experience:**
+   ```bash
+   streamlit run main_upgraded_v2.py
+   ```
+   
+   **For the classic version:**
    ```bash
    streamlit run main.py
    ```
 
 The app will open at `http://localhost:8501`
+
+> **Note**: The deployed version uses `main_upgraded_v2.py` with all the latest features and bug fixes.
 
 ---
 
@@ -144,11 +168,13 @@ The app will open at `http://localhost:8501`
 
 ```
 AI-Study-Assistant/
-├── main.py                      # Main application entry point
+├── main.py                      # Classic application entry point
+├── main_upgraded_v2.py          # 🆕 Upgraded v2.0 (Production)
 ├── requirements.txt             # Python dependencies
 ├── .env.example                 # Environment variables template
 ├── .gitignore                   # Git ignore rules
 ├── README.md                    # This file
+├── SESSION_STATE_FIX.md         # 🆕 Session state fix documentation
 │
 ├── .streamlit/
 │   ├── config.toml             # Streamlit configuration
@@ -166,11 +192,15 @@ AI-Study-Assistant/
 │   │   ├── api_client.py       # API client for Groq
 │   │   ├── validators.py       # Input validation
 │   │   ├── data_processor.py   # Data processing utilities
-│   │   └── session_manager.py  # Session state management
+│   │   ├── session_manager.py  # 🔧 Enhanced session state management
+│   │   ├── robust_json_parser.py # 🆕 Bulletproof JSON parsing
+│   │   └── enhanced_prompts.py # 🆕 Advanced prompt engineering
 │   │
 │   ├── components/
 │   │   ├── __init__.py
-│   │   └── ui_styles.py        # UI styling and themes
+│   │   ├── ui_styles.py        # UI styling and themes
+│   │   ├── modern_ui_styles.py # 🆕 Modern professional UI
+│   │   └── diagram_renderer.py # 🆕 Mermaid diagram support
 │   │
 │   └── assets/                 # Static assets (images, icons)
 │
@@ -178,7 +208,8 @@ AI-Study-Assistant/
 │   ├── __init__.py
 │   ├── test_validators.py
 │   ├── test_data_processor.py
-│   └── test_api_client.py
+│   ├── test_api_client.py
+│   └── test_robust_json_parser.py # 🆕 JSON parser tests
 │
 └── docs/                       # Documentation
     ├── API.md
@@ -226,12 +257,14 @@ AI-Study-Assistant/
 2. **Deploy on Streamlit Cloud**
    - Go to [share.streamlit.io](https://share.streamlit.io)
    - Connect your GitHub repository
-   - Select `main.py` as the main file
+   - Select `main_upgraded_v2.py` as the main file (for v2.0 features)
    - Add secrets in the app settings:
      ```toml
      [api]
      groq_api_key = "gsk_your_api_key_here"
      ```
+   
+   **Current Deployment**: [Live App](https://manasa-l-hegde-ai-study-assistant-main-upgraded-v2-tsxxib.streamlit.app/)
 
 3. **Deploy!**
    - Click Deploy
@@ -310,21 +343,32 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-- **GitHub**: [@yourusername](https://github.com/yourusername)
-- **Email**: your.email@example.com
-- **Twitter**: [@yourhandle](https://twitter.com/yourhandle)
+- **GitHub**: [@Manasa-L-Hegde](https://github.com/Manasa-L-Hegde)
+- **Repository**: [AI-Study-Assistant](https://github.com/Manasa-L-Hegde/AI-Study-Assistant)
+- **Live Demo**: [Streamlit App](https://manasa-l-hegde-ai-study-assistant-main-upgraded-v2-tsxxib.streamlit.app/)
 
 ---
 
 ## 🗺️ Roadmap
 
+### ✅ Completed
+- [x] Session state management fixes
+- [x] Visual diagram support (Mermaid)
+- [x] Modern professional UI
+- [x] Comprehensive and Quick modes
+- [x] Robust JSON parsing
+- [x] Production deployment
+
+### 🚧 In Progress
 - [ ] Multi-language support
 - [ ] Voice input for topics
+- [ ] Advanced analytics dashboard
+
+### 📋 Planned
 - [ ] Collaborative study sessions
 - [ ] Spaced repetition system
 - [ ] Mobile app (React Native)
 - [ ] Integration with note-taking apps
-- [ ] Advanced analytics and insights
 - [ ] Custom quiz difficulty levels
 - [ ] Study group features
 - [ ] Gamification elements
@@ -333,16 +377,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📊 Stats
 
-![GitHub stars](https://img.shields.io/github/stars/yourusername/AI-Study-Assistant?style=social)
-![GitHub forks](https://img.shields.io/github/forks/yourusername/AI-Study-Assistant?style=social)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/AI-Study-Assistant)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/yourusername/AI-Study-Assistant)
+![GitHub stars](https://img.shields.io/github/stars/Manasa-L-Hegde/AI-Study-Assistant?style=social)
+![GitHub forks](https://img.shields.io/github/forks/Manasa-L-Hegde/AI-Study-Assistant?style=social)
+![GitHub issues](https://img.shields.io/github/issues/Manasa-L-Hegde/AI-Study-Assistant)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Manasa-L-Hegde/AI-Study-Assistant)
 
 ---
 
 <div align="center">
 
-**Made with ❤️ by [Your Name](https://github.com/yourusername)**
+**Made with ❤️ by [Manasa L Hegde](https://github.com/Manasa-L-Hegde)**
+
+🚀 [Try the Live Demo](https://manasa-l-hegde-ai-study-assistant-main-upgraded-v2-tsxxib.streamlit.app/)
 
 ⭐ Star this repo if you find it helpful!
 
