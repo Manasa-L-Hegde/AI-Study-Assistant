@@ -1,2 +1,22 @@
+# Core dependencies
 streamlit>=1.35.0
 openai>=1.40.0
+
+# Environment and configuration
+python-dotenv>=1.0.0
+
+# Data validation and processing
+pydantic>=2.0.0
+pandas>=2.0.0
+
+# Visualization (for diagrams and charts)
+plotly>=5.18.0
+
+# Testing (optional, for development)
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Code quality (optional, for development)
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.5.0
