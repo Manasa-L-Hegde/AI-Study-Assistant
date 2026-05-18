@@ -389,6 +389,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Made with ❤️ by [Manasa L Hegde](https://github.com/Manasa-L-Hegde)**
 
 🚀 [Try the Live Demo](https://manasa-l-hegde-ai-study-assistant-main-upgraded-v2-tsxxib.streamlit.app/)
+Note: The demo is hosted on Streamlit Community Cloud (free tier), so initial startup may take a few seconds.
 
 ⭐ Star this repo if you find it helpful!
 
